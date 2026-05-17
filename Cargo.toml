@@ -1,0 +1,22 @@
+[package]
+name = "stm32-blink"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "stm32-blink"
+test = false
+bench = false
+
+[dependencies]
+
+[profile.dev]
+opt-level = 1
+debug = true
+lto = false
+
+[profile.release]
+opt-level = "s"
+debug = false
+lto = true
+codegen-units = 1
