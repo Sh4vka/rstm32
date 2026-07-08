@@ -3,7 +3,7 @@
 
 use core::panic::PanicInfo;
 
-use crate::f103::gpio::LogPin;
+use crate::f103::{gpio::LogPin, systick};
 
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -40,12 +40,6 @@ pub unsafe extern "C" fn Reset() -> ! {
     main()
 }
 
-fn delay_ms(mut count: u32) {
-    while count > 1 {
-        count -= 1;
-    }
-}
-
 mod f103;
 use f103::gpio::{Pin, Port, TypePin};
 
@@ -56,10 +50,12 @@ fn main() -> ! {
     loop {
         a0.up();
         a1.down();
-        delay_ms(5000000);
+        systick::init(100000);
+        systick::wait();
         a1.up();
         a0.down();
-        delay_ms(5000000);
+        systick::init(100000);
+        systick::wait();
     }
 }
 

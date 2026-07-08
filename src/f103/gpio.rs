@@ -1,7 +1,5 @@
-use core::{ptr::{read_volatile, write_volatile}};
-
 #[repr(C)]
-struct gpio_regs {
+struct regs {
     crl     : u32,
     crh     : u32,
     idr     : u32,
@@ -39,7 +37,7 @@ pub struct Pin {
 }
 
 impl Port {
-    fn regs(self) -> &'static mut gpio_regs {
+    fn regs(self) -> &'static mut regs {
         let addr = match self {
             Port::PA => GPIOA_BASE,
             Port::PB => GPIOB_BASE,
@@ -48,7 +46,7 @@ impl Port {
             Port::PE => GPIOE_BASE,
         };
         unsafe {
-            &mut *(addr as *mut gpio_regs) 
+            &mut *(addr as *mut regs) 
         }
     }
 }
@@ -82,16 +80,12 @@ impl Pin {
 
     pub fn up(&self) {
         let gpio = self.port.regs();
-        unsafe {
-            write_volatile(&mut gpio.bsrr, 1 << self.pin as u32);
-        }
+        gpio.bsrr = 1 << self.pin as u32;
     }
 
     pub fn down(&self) {
         let gpio = self.port.regs();
-        unsafe {
-            write_volatile(&mut gpio.bsrr, (1 << (self.pin + 16)) as u32);
-        }
+        gpio.bsrr = 1 << (self.pin + 16) as u32;
     }
 }
 

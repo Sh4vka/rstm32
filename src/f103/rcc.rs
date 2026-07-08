@@ -1,7 +1,7 @@
 const RCC_BASE  : u32 = 0x40021000;
 
 #[repr(C)]
-struct rcc {
+struct regs {
     cr      : u32,
     cfgr    : u32,
     cir     : u32,
@@ -23,7 +23,7 @@ const RCC_APB2ENR_IOPCEN    : u32 = 1 << 4;
 const RCC_APB2ENR_IOPDEN    : u32 = 1 << 5;
 
 pub fn init() {
-    let rcc_ = RCC_BASE as *mut rcc;
+    let rcc_ = RCC_BASE as *mut regs;
     let mask = RCC_APB2ENR_IOPAEN | RCC_APB2ENR_IOPBEN | 
                RCC_APB2ENR_IOPCEN | RCC_APB2ENR_IOPDEN;
     unsafe {
