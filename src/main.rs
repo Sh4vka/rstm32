@@ -3,8 +3,6 @@
 
 use core::panic::PanicInfo;
 
-use crate::f103::{gpio::{self, LogPin}, systick};
-
 #[repr(C)]
 #[derive(Copy, Clone)]
 union Vector {
@@ -41,19 +39,22 @@ pub unsafe extern "C" fn Reset() -> ! {
 }
 
 mod f103;
-use f103::gpio::{Pin, Port, TypePin};
+use f103::{gpio::{Pin, Port, TypePin, LogPin}, systick, gpio};
+
+use crate::components::d1088bs;
+mod components;
 
 fn main() -> ! {
     f103::rcc::init();
-    let a0 = Pin::new(Port::PA, 0, TypePin::Output(LogPin::Gpio));
-    let a1 = Pin::new(Port::PA, 1, TypePin::Output(LogPin::Gpio));
-    let c15 = Pin::new(Port::PC, 15, TypePin::Output(LogPin::Gpio));
-    let pins = [c15, a0, a1];
+    let mut m = d1088bs::Matrix::new();
     loop {
-        gpio::change_pins(&pins, [true, false, true]);
-        systick::delay_ms(10);
-        gpio::change_pins(&pins, [false, true, false]);
-        systick::delay_ms(10);
+        for y in 0..8 {
+            for x in 0..8 {
+                m.write(x, y);
+                systick::delay_ms(100);
+                m.erase(x, y);
+            }
+        }
     }
 }
 
