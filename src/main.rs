@@ -3,6 +3,8 @@
 
 use core::panic::PanicInfo;
 
+use crate::f103::gpio::LogPin;
+
 #[repr(C)]
 #[derive(Copy, Clone)]
 union Vector {
@@ -44,16 +46,20 @@ fn delay_ms(mut count: u32) {
     }
 }
 
-mod lib;
+mod f103;
+use f103::gpio::{Pin, Port, TypePin};
 
 fn main() -> ! {
-    lib::rcc::init();
-    lib::gpio::init();
+    f103::rcc::init();
+    let a0 = Pin::new(Port::PA, 0, TypePin::Output(LogPin::Gpio));
+    let a1 = Pin::new(Port::PA, 1, TypePin::Output(LogPin::Gpio));
     loop {
-        lib::gpio::up();
-        delay_ms(50);
-        lib::gpio::down();
-        delay_ms(50);
+        a0.up();
+        a1.down();
+        delay_ms(5000000);
+        a1.up();
+        a0.down();
+        delay_ms(5000000);
     }
 }
 

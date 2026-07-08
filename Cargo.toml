@@ -11,7 +11,7 @@ bench = false
 [dependencies]
 
 [profile.dev]
-opt-level = 1
+opt-level = 0
 debug = true
 lto = false
 
