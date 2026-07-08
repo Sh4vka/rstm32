@@ -3,7 +3,7 @@
 
 use core::panic::PanicInfo;
 
-use crate::f103::{gpio::LogPin, systick};
+use crate::f103::{gpio::{self, LogPin}, systick};
 
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -47,12 +47,12 @@ fn main() -> ! {
     f103::rcc::init();
     let a0 = Pin::new(Port::PA, 0, TypePin::Output(LogPin::Gpio));
     let a1 = Pin::new(Port::PA, 1, TypePin::Output(LogPin::Gpio));
+    let c15 = Pin::new(Port::PC, 15, TypePin::Output(LogPin::Gpio));
+    let pins = [c15, a0, a1];
     loop {
-        a0.up();
-        a1.down();
+        gpio::change_pins(&pins, [true, false, true]);
         systick::delay_ms(10);
-        a1.up();
-        a0.down();
+        gpio::change_pins(&pins, [false, true, false]);
         systick::delay_ms(10);
     }
 }

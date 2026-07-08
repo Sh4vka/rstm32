@@ -94,6 +94,16 @@ impl Pin {
     }
 }
 
+// TODO сделать привязку к порту
+pub fn change_pins<const N: usize>(pins : &[Pin; N], states : [bool; N]) {
+    for i in 0..N {
+        match states[i] {
+            true => pins[i].up(),
+            false => pins[i].down(),
+        }
+    }
+}
+
 const GPIOA_BASE    : u32 = 0x40010800;
 const GPIOB_BASE    : u32 = 0x40010C00;
 const GPIOC_BASE    : u32 = 0x40011000;
