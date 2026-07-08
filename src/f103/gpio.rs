@@ -1,3 +1,4 @@
+use core::ptr::write_volatile;
 #[repr(C)]
 struct regs {
     crl     : u32,
@@ -80,12 +81,16 @@ impl Pin {
 
     pub fn up(&self) {
         let gpio = self.port.regs();
-        gpio.bsrr = 1 << self.pin as u32;
+        unsafe {
+            write_volatile(&mut gpio.bsrr, 1 << self.pin as u32);
+        }
     }
 
     pub fn down(&self) {
         let gpio = self.port.regs();
-        gpio.bsrr = 1 << (self.pin + 16) as u32;
+        unsafe {
+            write_volatile(&mut gpio.bsrr, 1 << (self.pin + 16) as u32);
+        }
     }
 }
 

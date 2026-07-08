@@ -1,4 +1,4 @@
-use core::ptr::write_volatile;
+use core::ptr::{read_volatile, write_volatile};
 
 #[repr(C)]
 struct regs {
@@ -14,16 +14,17 @@ fn regs() -> &'static mut regs {
     }
 }
 
-pub fn init(us : u32) {
+pub fn delay_ms(ms : u32) {
     let regs = regs();
-        regs.load = us;
-        regs.val = 0;
-        regs.ctrl = CLKSOURCE | ENABLE;
-}
-
-pub fn wait() {
-    let regs = regs();
-    while (regs.ctrl & COUNTFLAG == 0) {}
+    unsafe {
+    write_volatile(&mut regs.load, 8000 - 1);
+    write_volatile(&mut regs.val, 0);
+    write_volatile(&mut regs.ctrl, CLKSOURCE | ENABLE);
+    for _ in 0..ms {
+        while (read_volatile(&regs.ctrl) & COUNTFLAG == 0) {};
+    }
+    write_volatile(&mut regs.ctrl, 0);
+    }
 }
 
 const SYSTICK_BASE  : u32 = 0xE000E010;

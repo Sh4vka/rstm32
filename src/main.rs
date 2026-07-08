@@ -50,12 +50,10 @@ fn main() -> ! {
     loop {
         a0.up();
         a1.down();
-        systick::init(100000);
-        systick::wait();
+        systick::delay_ms(10);
         a1.up();
         a0.down();
-        systick::init(100000);
-        systick::wait();
+        systick::delay_ms(10);
     }
 }
 
