@@ -58,6 +58,3 @@ impl Matrix {
         gpio::change_pins(&self.columns, self.cur_cols);
     }
 }
-
-const ROW_PINS: [usize; 8] = [8, 13, 7, 11, 0, 6, 1, 4];
-const COL_PINS: [usize; 8] = [12, 2, 3, 9, 5, 10, 14, 15];
