@@ -26,7 +26,7 @@ pub enum IO {
 }
 
 #[derive(PartialEq, Eq, Copy, Clone)]
-pub enum LogPin {
+pub enum LogOut {
     Alt(IO),
     Gpio(IO),
 }
@@ -34,7 +34,7 @@ pub enum LogPin {
 #[derive(Copy, Clone)]
 pub enum TypePin {
     Input,
-    Output(LogPin)
+    Output(LogOut)
 }
 
 pub struct Pin {
@@ -74,7 +74,7 @@ impl Pin {
             },
             TypePin::Output(mode) => {
                 match mode {
-                    LogPin::Alt(io) => {
+                    LogOut::Alt(io) => {
                         if io == IO::OD {
                             *reg &= !(0b1111 << shift);
                             *reg |= AF_OD_50MHZ << shift;
@@ -83,7 +83,7 @@ impl Pin {
                             *reg |= AF_PP_50MHZ << shift;
                         }
                     },
-                    LogPin::Gpio(io) => {
+                    LogOut::Gpio(io) => {
                         if io == IO::OD {
                             *reg &= !(0b1111 << shift);
                             *reg |= OUTPUT_OD_50MHZ << shift;
