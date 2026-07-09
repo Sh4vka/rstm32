@@ -1,4 +1,4 @@
-use crate::f103::{gpio::{self, LogPin, Pin, Port, TypePin}, systick};
+use crate::f103::{gpio::{self, LogPin, Pin, Port, TypePin, IO}, systick};
 
 pub struct LCD8 {
     rs  : Pin,
@@ -8,17 +8,17 @@ pub struct LCD8 {
 
 impl LCD8 {
     pub fn new() -> Self{
-        let a0 = Pin::new(Port::PA, 0, TypePin::Output(LogPin::Gpio));
-        let a1 = Pin::new(Port::PA, 1, TypePin::Output(LogPin::Gpio));
-        let a2 = Pin::new(Port::PA, 2, TypePin::Output(LogPin::Gpio));
-        let a3 = Pin::new(Port::PA, 3, TypePin::Output(LogPin::Gpio));
-        let a4 = Pin::new(Port::PA, 4, TypePin::Output(LogPin::Gpio));
-        let a5 = Pin::new(Port::PA, 5, TypePin::Output(LogPin::Gpio));
-        let a6 = Pin::new(Port::PA, 6, TypePin::Output(LogPin::Gpio));
-        let a7 = Pin::new(Port::PA, 7, TypePin::Output(LogPin::Gpio));
+        let a0 = Pin::new(Port::PA, 0, TypePin::Output(LogPin::Gpio(IO::PP)));
+        let a1 = Pin::new(Port::PA, 1, TypePin::Output(LogPin::Gpio(IO::PP)));
+        let a2 = Pin::new(Port::PA, 2, TypePin::Output(LogPin::Gpio(IO::PP)));
+        let a3 = Pin::new(Port::PA, 3, TypePin::Output(LogPin::Gpio(IO::PP)));
+        let a4 = Pin::new(Port::PA, 4, TypePin::Output(LogPin::Gpio(IO::PP)));
+        let a5 = Pin::new(Port::PA, 5, TypePin::Output(LogPin::Gpio(IO::PP)));
+        let a6 = Pin::new(Port::PA, 6, TypePin::Output(LogPin::Gpio(IO::PP)));
+        let a7 = Pin::new(Port::PA, 7, TypePin::Output(LogPin::Gpio(IO::PP)));
 
-        let b5 = Pin::new(Port::PB, 5, TypePin::Output(LogPin::Gpio));
-        let b6 = Pin::new(Port::PB, 6, TypePin::Output(LogPin::Gpio));
+        let b5 = Pin::new(Port::PB, 5, TypePin::Output(LogPin::Gpio(IO::PP)));
+        let b6 = Pin::new(Port::PB, 6, TypePin::Output(LogPin::Gpio(IO::PP)));
 
         LCD8 {rs : b5, 
               en : b6,

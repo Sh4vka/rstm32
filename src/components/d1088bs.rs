@@ -1,4 +1,4 @@
-use crate::f103::{gpio::{Pin, Port, TypePin, LogPin}, gpio};
+use crate::f103::{gpio::{Pin, Port, TypePin, LogPin, IO}, gpio};
 
 pub struct Matrix {
     rows        : [Pin; 8],
@@ -9,23 +9,23 @@ pub struct Matrix {
 
 impl Matrix {
     pub fn new() -> Self {
-        let r5 = Pin::new(Port::PA, 0, TypePin::Output(LogPin::Gpio));
-        let r7 = Pin::new(Port::PA, 1, TypePin::Output(LogPin::Gpio));
-        let c2 = Pin::new(Port::PA, 2, TypePin::Output(LogPin::Gpio));
-        let c3 = Pin::new(Port::PA, 3, TypePin::Output(LogPin::Gpio));
-        let r8 = Pin::new(Port::PA, 4, TypePin::Output(LogPin::Gpio));
-        let c5 = Pin::new(Port::PA, 5, TypePin::Output(LogPin::Gpio));
-        let r6 = Pin::new(Port::PA, 6, TypePin::Output(LogPin::Gpio));
-        let r3 = Pin::new(Port::PA, 7, TypePin::Output(LogPin::Gpio));
+        let r5 = Pin::new(Port::PA, 0, TypePin::Output(LogPin::Gpio(IO::PP)));
+        let r7 = Pin::new(Port::PA, 1, TypePin::Output(LogPin::Gpio(IO::PP)));
+        let c2 = Pin::new(Port::PA, 2, TypePin::Output(LogPin::Gpio(IO::PP)));
+        let c3 = Pin::new(Port::PA, 3, TypePin::Output(LogPin::Gpio(IO::PP)));
+        let r8 = Pin::new(Port::PA, 4, TypePin::Output(LogPin::Gpio(IO::PP)));
+        let c5 = Pin::new(Port::PA, 5, TypePin::Output(LogPin::Gpio(IO::PP)));
+        let r6 = Pin::new(Port::PA, 6, TypePin::Output(LogPin::Gpio(IO::PP)));
+        let r3 = Pin::new(Port::PA, 7, TypePin::Output(LogPin::Gpio(IO::PP)));
         
-        let r1 = Pin::new(Port::PB, 12, TypePin::Output(LogPin::Gpio));
-        let c4 = Pin::new(Port::PB, 13, TypePin::Output(LogPin::Gpio));
-        let c6 = Pin::new(Port::PB, 14, TypePin::Output(LogPin::Gpio));
-        let r4 = Pin::new(Port::PB, 15, TypePin::Output(LogPin::Gpio));
-        let c1 = Pin::new(Port::PA, 8, TypePin::Output(LogPin::Gpio));
-        let r2 = Pin::new(Port::PA, 9, TypePin::Output(LogPin::Gpio));
-        let c7 = Pin::new(Port::PA, 10, TypePin::Output(LogPin::Gpio));
-        let c8 = Pin::new(Port::PA, 11, TypePin::Output(LogPin::Gpio));
+        let r1 = Pin::new(Port::PB, 12, TypePin::Output(LogPin::Gpio(IO::PP)));
+        let c4 = Pin::new(Port::PB, 13, TypePin::Output(LogPin::Gpio(IO::PP)));
+        let c6 = Pin::new(Port::PB, 14, TypePin::Output(LogPin::Gpio(IO::PP)));
+        let r4 = Pin::new(Port::PB, 15, TypePin::Output(LogPin::Gpio(IO::PP)));
+        let c1 = Pin::new(Port::PA, 8, TypePin::Output(LogPin::Gpio(IO::PP)));
+        let r2 = Pin::new(Port::PA, 9, TypePin::Output(LogPin::Gpio(IO::PP)));
+        let c7 = Pin::new(Port::PA, 10, TypePin::Output(LogPin::Gpio(IO::PP)));
+        let c8 = Pin::new(Port::PA, 11, TypePin::Output(LogPin::Gpio(IO::PP)));
 
         let mut m = Matrix {
             rows    : [r1, r2, r3, r4, r5, r6, r7, r8],

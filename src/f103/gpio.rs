@@ -20,9 +20,15 @@ pub enum Port {
 }
 
 #[derive(PartialEq, Eq, Copy, Clone)]
+pub enum IO {
+    PP,
+    OD,
+}
+
+#[derive(PartialEq, Eq, Copy, Clone)]
 pub enum LogPin {
-    Alt,
-    Gpio,
+    Alt(IO),
+    Gpio(IO),
 }
 
 #[derive(Copy, Clone)]
@@ -67,12 +73,25 @@ impl Pin {
                 *reg |= INPUT_FLOATING << shift;
             },
             TypePin::Output(mode) => {
-                if mode == LogPin::Alt {
-                    *reg &= !(0b1111 << shift);
-                    *reg |= AF_PP_2MHZ << shift;
-                } else {
-                    *reg &= !(0b1111 << shift);
-                    *reg |= OUTPUT_PP_2MHZ << shift;
+                match mode {
+                    LogPin::Alt(io) => {
+                        if io == IO::OD {
+                            *reg &= !(0b1111 << shift);
+                            *reg |= AF_OD_50MHZ << shift;
+                        } else {
+                            *reg &= !(0b1111 << shift);
+                            *reg |= AF_PP_50MHZ << shift;
+                        }
+                    },
+                    LogPin::Gpio(io) => {
+                        if io == IO::OD {
+                            *reg &= !(0b1111 << shift);
+                            *reg |= OUTPUT_OD_50MHZ << shift;
+                        } else {
+                            *reg &= !(0b1111 << shift);
+                            *reg |= OUTPUT_PP_50MHZ << shift;
+                        }
+                    },
                 }
             }
         }
@@ -110,11 +129,15 @@ const GPIOC_BASE    : u32 = 0x40011000;
 const GPIOD_BASE    : u32 = 0x40011400;
 const GPIOE_BASE    : u32 = 0x40011800;
 
-const INPUT_ANALOG  : u32 = 0b0000;
-const INPUT_FLOATING: u32 = 0b0100;
-const INPUT_PULL    : u32 = 0b1000;
+const INPUT_ANALOG      : u32 = 0b0000;
+const INPUT_FLOATING    : u32 = 0b0100;
+const INPUT_PULL        : u32 = 0b1000;
 
-const OUTPUT_PP_2MHZ: u32 = 0b0010;
-const OUTPUT_OD_2MHZ: u32 = 0b0110;
-const AF_PP_2MHZ    : u32 = 0b1010;
-const AF_OD_2MHZ    : u32 = 0b1110;
+const OUTPUT_PP_2MHZ    : u32 = 0b0010;
+const OUTPUT_PP_50MHZ   : u32 = 0b0011;
+const OUTPUT_OD_2MHZ    : u32 = 0b0110;
+const OUTPUT_OD_50MHZ   : u32 = 0b0111;
+const AF_PP_2MHZ        : u32 = 0b1010;
+const AF_PP_50MHZ       : u32 = 0b1011;
+const AF_OD_2MHZ        : u32 = 0b1110;
+const AF_OD_50MHZ       : u32 = 0b1111;
