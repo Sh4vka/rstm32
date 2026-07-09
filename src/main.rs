@@ -39,21 +39,20 @@ pub unsafe extern "C" fn Reset() -> ! {
 }
 
 mod f103;
-use crate::f103::{gpio::{Pin, Port, TypePin, LogOut, IO}, systick, spi::{NumSpi, Spi}};
+use crate::f103::{gpio::{Pin, Port, TypePin, LogOut, IO}, systick, spi::{NumSpi, Spi}, usart::{Usarts, Uart}};
 use crate::components::{d1088bs, lcd1602a};
 mod components;
 
 fn main() -> ! {
     f103::rcc::init();
-    let spi1 = Spi::master(NumSpi::SPI1);
-    let spi2 = Spi::slave(NumSpi::SPI2);
-    let mut data1 = 0;
-    let mut data2 = 0;
+    let uart1 = Uart::new(Usarts::USART1);
+    let uart2 = Uart::new(Usarts::USART2);
+    let (mut data1, mut data2) = (0, 0);
     loop {
-        spi2.send(0x32);
-        spi1.send(0x55);
-        data1 = spi2.read();
-        data2 = spi1.read();
+       uart1.send(0x55); 
+       data1 = uart2.read();
+       uart2.send(0x01);
+       data2 = uart1.read();
     }
 }
 

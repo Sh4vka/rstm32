@@ -53,11 +53,13 @@ pub fn init() {
     let rcc_ = RCC_BASE as *mut regs;
     let mask = IOPARST | IOPBRST | 
                 IOPCRST | IOPDRST |
-                IOPERST | SPI1RST;
+                IOPERST | SPI1RST |
+                USART1RST;
     unsafe {
         (*rcc_).apb2enr |= mask;
     }
-    let mask = SPI2RST;
+    let mask = SPI2RST | USART2RST |
+                USART3RST;
     unsafe {
         (*rcc_).apb1enr |= mask
     }
