@@ -41,19 +41,21 @@ pub unsafe extern "C" fn Reset() -> ! {
 mod f103;
 use f103::{gpio::{Pin, Port, TypePin, LogPin}, systick, gpio};
 
-use crate::components::d1088bs;
+use crate::components::{d1088bs, lcd1602a};
 mod components;
 
 fn main() -> ! {
     f103::rcc::init();
-    let mut m = d1088bs::Matrix::new();
+    let display = lcd1602a::LCD8::new();
+    display.start();
+    let mut i : i32 = -155;
     loop {
-        for y in 0..8 {
-            for x in 0..8 {
-                m.write(x, y);
-                systick::delay_ms(100);
-                m.erase(x, y);
-            }
+        display.print_i32(i);
+        i += 1;
+        systick::delay_ms(200);
+        display.clear();
+        if i >= 100000 {
+            i = 0
         }
     }
 }
