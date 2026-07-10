@@ -3,6 +3,8 @@
 
 use core::panic::PanicInfo;
 
+use crate::{calculator::Calc, f103::systick};
+
 #[repr(C)]
 #[derive(Copy, Clone)]
 union Vector {
@@ -38,45 +40,17 @@ pub unsafe extern "C" fn Reset() -> ! {
     main()
 }
 
-mod f103;
-use crate::{components::{digit::Digit, timer::Timer}, f103::{gpio::{IO, LogOut, Pin, Port, TypePin}, spi::{NumSpi, Spi}, systick, usart::{Uart, Usarts}}};
-use crate::components::{d1088bs, lcd1602a, timer, digit, keypad};
+mod calculator;
 mod components;
+mod f103;
 
 fn main() -> ! {
     f103::rcc::init();
-    let digit = Digit::new(
-        [
-        (2, Port::PA),
-        (3, Port::PA),
-        (6, Port::PA),
-        (5, Port::PA),
-        (4, Port::PA),
-        (1, Port::PA),
-        (0, Port::PA),
-        (7, Port::PA)
-        ]
-    );
 
-    let keypad = keypad::KeyPad::new(
-        [
-            (8, Port::PA),
-            (9, Port::PA),
-            (10, Port::PA),
-            (11, Port::PA),
-        ],
-        [
-            (15, Port::PB),
-            (14, Port::PB),
-            (12, Port::PB),
-            (13, Port::PB),
-        ]
-    );
-
+    let mut calc = Calc::new();
     loop {
-        if let Some(num) = keypad.get_key() {
-            digit.write_hex(num, false);
-        }
+        calc.execute();
+        systick::delay_ms(50);
     }
 }
 
