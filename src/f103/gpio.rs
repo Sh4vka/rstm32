@@ -1,4 +1,4 @@
-use core::ptr::write_volatile;
+use core::ptr::{read_volatile, write_volatile};
 #[repr(C)]
 struct regs {
     crl     : u32,
@@ -70,7 +70,8 @@ impl Pin {
         match ptype {
             TypePin::Input => {
                 *reg &= !(0b1111 << shift);
-                *reg |= INPUT_FLOATING << shift;
+                *reg |= INPUT_PULL << shift;
+                gpio.odr &= !(1 << pin);
             },
             TypePin::Output(mode) => {
                 match mode {
@@ -111,6 +112,13 @@ impl Pin {
             write_volatile(&mut gpio.bsrr, 1 << (self.pin + 16) as u32);
         }
     }
+
+    pub fn read(&self) -> bool {
+        let gpio = self.port.regs();
+        unsafe {
+            (read_volatile(&gpio.idr) & (1 << self.pin)) != 0
+        }
+    }
 }
 
 // TODO сделать привязку к порту
@@ -122,6 +130,14 @@ pub fn change_pins<const N: usize>(pins : &[Pin; N], states : [bool; N]) {
         }
     }
 }
+
+pub fn read_pins<const N: usize>(pins : &[Pin; N]) -> [bool; N] {
+    let mut states = [false; N];
+    for i in 0..N {
+        states[i] = pins[i].read();
+    }
+    states
+ }
 
 const GPIOA_BASE    : u32 = 0x40010800;
 const GPIOB_BASE    : u32 = 0x40010C00;
