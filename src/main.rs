@@ -3,6 +3,7 @@
 
 use core::panic::PanicInfo;
 
+use crate::f103::spi::Spi;
 use crate::{calculator::Calc, f103::systick};
 
 #[repr(C)]
@@ -44,13 +45,18 @@ mod calculator;
 mod components;
 mod f103;
 
+use crate::components::max7219::{self, MAX7219};
+
 fn main() -> ! {
     f103::rcc::init();
 
-    let mut calc = Calc::new();
+    let mut max = MAX7219::new(f103::spi::NumSpi::SPI2);
+    max.init();
+    max.clear();
+    max.set_pixel((1, 2), true);
+
     loop {
-        calc.execute();
-        systick::delay_ms(50);
+
     }
 }
 

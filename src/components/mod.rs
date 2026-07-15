@@ -5,3 +5,4 @@ pub mod lcd1602a;
 pub mod digit;
 pub mod timer;
 pub mod keypad;
+pub mod max7219;
